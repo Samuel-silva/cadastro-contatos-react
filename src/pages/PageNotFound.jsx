@@ -17,7 +17,6 @@ function PageNotFound(props) {
 				<div className="text-center pt-lg-4 pt-sm-2">
 					<Button
 						size="lg"
-						className="text-hover-white"
 						squared="true"
 						variant="outline-primary"
 						onClick={() => navigate('/')}
