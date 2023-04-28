@@ -8,6 +8,11 @@ $info: #457b9d;
 
 @import "~bootstrap/scss/bootstrap";
 
+.btn-outline-primary {
+  --bs-btn-hover-color: #FFF !important;
+  --bs-btn-active-color: #FFF !important;
+}
+
 body {
   min-width: 320px;
   min-height: 100vh;
