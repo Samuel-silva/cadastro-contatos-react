@@ -1,36 +1,83 @@
-import { Button, ListGroup } from 'react-bootstrap'
-import * as Icon from 'react-bootstrap-icons';
+import './ListContacts.scss';
 
-function ListContacts(props) {
-	return (
-    <div className='mt-5'>
-      <ListGroup>
+import { Button, ListGroup, OverlayTrigger, ProgressBar, Tooltip } from 'react-bootstrap'
+import * as Icon from 'react-bootstrap-icons';
+import { useContacts } from '../api/useContacts';
+import NotFoundContacts from './NotFoundContacts';
+
+const ListContacts = () => {
+  const { data: contacts, erro, isLoading } = useContacts();
+  let container;
+
+  if (isLoading) {
+    const progress = [];
+    for (let i = 0; i < 5; i++) {
+        progress.push(<ProgressBar key={i} className='mt-3' animated variant="secondary" now={100} />);
+    }
+    container = progress;
+  } else if (erro || contacts.length === 0) {
+    container = <NotFoundContacts erro={erro} />
+  } else {
+    const item = contacts?.map(contact => {
+      return (
         <ListGroup.Item
-					className="d-flex justify-content-between align-items-center py-3"
+          key={contact.id}
+          className="d-flex justify-content-between align-items-center py-3"
         >
-          <p class="mb-0">
-						Nome
-					</p>
-          <div class="pl-2 d-flex">
-						<Button
-							variant="outline-success"
-						>
-							<Icon.Eye />
-						</Button>
-						<Button
-							variant="outline-primary"
-							className="mx-2"
-						>
-							<Icon.PencilSquare />
-						</Button>
-						<Button
-							variant="outline-danger"
-						>
-							<Icon.Trash />
-						</Button>
-					</div>
+          <p className="mb-0">
+            {contact.name}
+          </p>
+          <div className="pl-2 d-flex">
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  Visualizar
+                </Tooltip>
+              }
+            >
+              <Button
+                variant="outline-success"
+              >
+                <Icon.Eye />
+              </Button>
+            </OverlayTrigger>
+            <OverlayTrigger
+              overlay={
+                <Tooltip>
+                  Editar
+                </Tooltip>
+              }
+            >
+              <Button
+                variant="outline-primary"
+                className="mx-2"
+              >
+                <Icon.PencilSquare />
+              </Button>
+            </OverlayTrigger>
+            <OverlayTrigger
+              overlay={
+                <Tooltip className='text-primary'>
+                  Excluir
+                </Tooltip>
+              }
+            >
+              <Button
+                variant="outline-danger"
+              >
+                <Icon.Trash />
+              </Button>
+            </OverlayTrigger>
+          </div>
         </ListGroup.Item>
-      </ListGroup>
+      )
+    });
+    container = <ListGroup>{item}</ListGroup>
+  }
+
+  return (
+    <div className='mt-5'>
+      {container}
     </div>
   );
 }

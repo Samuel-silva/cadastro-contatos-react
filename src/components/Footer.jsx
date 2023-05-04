@@ -1,6 +1,6 @@
 import Container from 'react-bootstrap/Container';
 
-import './Footer.scss'
+import './Footer.scss';
 
 function Footer() {
 	const currentYear = new Date().getFullYear()
