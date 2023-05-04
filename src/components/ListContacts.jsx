@@ -2,12 +2,20 @@ import './ListContacts.scss';
 
 import { Button, ListGroup, OverlayTrigger, ProgressBar, Tooltip } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons';
-import { useContacts } from '../api/useContacts';
+import { useGet } from '../api/useGet';
 import NotFoundContacts from './NotFoundContacts';
+import { initialState, reducer } from '../store'
+import { GetAllContacts } from '../store/actions'
+import { useEffect, useReducer } from 'react';
 
 const ListContacts = () => {
-  const { data: contacts, erro, isLoading } = useContacts();
+  const { data: contacts, erro, isLoading } = useGet('contacts');
+  const [, dispatch] = useReducer(reducer, initialState);
   let container;
+
+  useEffect(() => {
+    GetAllContacts(dispatch, contacts)
+  }, [contacts])
 
   if (isLoading) {
     const progress = [];
@@ -83,4 +91,3 @@ const ListContacts = () => {
 }
 
 export default ListContacts;
-
