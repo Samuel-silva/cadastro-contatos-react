@@ -2,13 +2,20 @@ import { useEffect, useState } from "react";
 
 import api from ".";
 
-function useGet(url) {
+const urlContacts = 'contacts';
+
+function useContcts(method, payload = null, id = 1) {
   const [data, setData] = useState([]);
   const [erro, setErro] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(function() {
-    api.get(url)
+    let url = urlContacts;
+    if (method === 'delete' || method === 'put') {
+      url = `urlContacts/${id}`;
+    }
+
+    api[method](url, payload)
       .then(response => {
         setData(response.data);
       })
@@ -18,9 +25,9 @@ function useGet(url) {
       .finally(() => {
         setIsLoading(false);
       })
-  }, [url])
+  }, [method, id, payload])
 
   return { data, erro, isLoading }
 }
 
-export { useGet };
+export { useContcts };

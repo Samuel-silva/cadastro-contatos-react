@@ -1,12 +1,15 @@
 import { BrowserRouter } from "react-router-dom";
 
 import Routes from "./routes";
+import Store from "./Store";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes />
-    </BrowserRouter>
+    <Store>
+      <BrowserRouter>
+        <Routes />
+      </BrowserRouter>
+    </Store>
   );
 }
 

@@ -2,19 +2,20 @@ import './ListContacts.scss';
 
 import { Button, ListGroup, OverlayTrigger, ProgressBar, Tooltip } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons';
-import { useGet } from '../api/useGet';
+import { useContcts } from '../api/useFetch';
 import NotFoundContacts from './NotFoundContacts';
-import { initialState, reducer } from '../store'
-import { GetAllContacts } from '../store/actions'
-import { useEffect, useReducer } from 'react';
+import { useContext, useEffect } from 'react';
+import { AppContext } from '../Store';
+import React from 'react';
 
 const ListContacts = () => {
-  const { data: contacts, erro, isLoading } = useGet('contacts');
-  const [, dispatch] = useReducer(reducer, initialState);
+  const { data: contacts, erro, isLoading } = useContcts('get', 'contacts');
+  const { setContactsStore } = useContext(AppContext);
   let container;
 
-  useEffect(() => {
-    GetAllContacts(dispatch, contacts)
+  useEffect(function() {
+    setContactsStore(contacts);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contacts])
 
   if (isLoading) {
