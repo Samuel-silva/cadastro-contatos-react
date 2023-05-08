@@ -4,14 +4,26 @@ import { Button, ListGroup, OverlayTrigger, ProgressBar, Tooltip } from 'react-b
 import * as Icon from 'react-bootstrap-icons';
 import { useContcts } from '../api/useFetch';
 import NotFoundContacts from './NotFoundContacts';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../Store';
 import React from 'react';
+import ModalDetails from './ModalDetails';
 
 const ListContacts = () => {
   const { data: contacts, erro, isLoading } = useContcts('get', 'contacts');
   const { setContactsStore } = useContext(AppContext);
+  const [id, setId] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   let container;
+
+  function openModal(idContact) {
+    setId(idContact);
+    setShowModal(true)
+  }
+
+  function closeModal() {
+    setShowModal(false)
+  }
 
   useEffect(function() {
     setContactsStore(contacts);
@@ -46,6 +58,7 @@ const ListContacts = () => {
             >
               <Button
                 variant="outline-success"
+                onClick={_=> openModal(contact.id)}
               >
                 <Icon.Eye />
               </Button>
@@ -87,6 +100,7 @@ const ListContacts = () => {
   return (
     <div className='mt-5'>
       {container}
+      <ModalDetails id={id} show={showModal} close={closeModal}  />
     </div>
   );
 }
