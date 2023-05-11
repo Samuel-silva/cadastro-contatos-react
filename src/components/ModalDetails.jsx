@@ -19,7 +19,7 @@ function ModalDetails(props) {
     setDetail(contact[0]);
   }, [id, contactsStore]);
 
-  if (detail?.name) {
+  if (show && detail?.name) {
     return (
       <>
         <Modal show={show} onHide={_ => close()} animation={false} size="lg">

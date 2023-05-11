@@ -2,35 +2,71 @@ import './ListContacts.scss';
 
 import { Button, ListGroup, OverlayTrigger, ProgressBar, Tooltip } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons';
-import { useContcts } from '../api/useFetch';
+import { useFetchContacts } from '../api/useFetchContacts';
 import NotFoundContacts from './NotFoundContacts';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../Store';
 import React from 'react';
 import ModalDetails from './ModalDetails';
+import ModalDeleteErro from './ModalDeleteErro';
 
 const ListContacts = () => {
-  const { data: contacts, erro, isLoading } = useContcts('get', 'contacts');
+  const { data, erro, loading, axiosFetch } = useFetchContacts();
   const { setContactsStore } = useContext(AppContext);
+
+  const [contacts, setContacts] = useState([]);
   const [id, setId] = useState(0);
+  const [loadingList, setLoadingList] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showModalDelete, setShowModalDelete] = useState(false);
   let container;
 
-  function openModal(idContact) {
-    setId(idContact);
-    setShowModal(true)
+  const getData = () => {
+    axiosFetch({
+      method: 'get',
+    })
   }
 
   function closeModal() {
-    setShowModal(false)
+    setShowModal(false);
+    setShowModalDelete(false);
+  }
+
+  function disableEnableLoading() {
+    setLoadingList(_ => !loadingList);
+  }
+
+  function finishDelete(erro) {
+    if (erro) {
+      setShowModalDelete(true);
+    } else {
+      getData();
+    }
+  }
+
+  function openModal(idContact) {
+    setId(idContact);
+    setShowModal(true);
+  }
+
+  function openModalDelete(idContact) {
+    setId(idContact);
+    setShowModalDelete(true);
   }
 
   useEffect(function() {
-    setContactsStore(contacts);
+    setContactsStore(data);
+    setContacts(data);
+    setLoadingList(loading);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contacts])
+  }, [data, erro, loading])
 
-  if (isLoading) {
+  useEffect(() => {
+      getData();
+      // eslint-disable-next-line
+  }, [])
+
+  if (loadingList) {
     const progress = [];
     for (let i = 0; i < 5; i++) {
         progress.push(<ProgressBar key={i} className='mt-3' animated variant="secondary" now={100} />);
@@ -86,6 +122,7 @@ const ListContacts = () => {
             >
               <Button
                 variant="outline-danger"
+                onClick={_=> openModalDelete(contact.id)}
               >
                 <Icon.Trash />
               </Button>
@@ -100,7 +137,18 @@ const ListContacts = () => {
   return (
     <div className='mt-5'>
       {container}
-      <ModalDetails id={id} show={showModal} close={closeModal}  />
+      <ModalDetails
+        close={closeModal}
+        id={id}
+        show={showModal}
+      />
+      <ModalDeleteErro
+        close={closeModal}
+        finishDelete={finishDelete}
+        id={id}
+        show={showModalDelete}
+        loadingList={disableEnableLoading}
+      />
     </div>
   );
 }

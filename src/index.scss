@@ -8,7 +8,12 @@ $info: #457b9d;
 
 @import "~bootstrap/scss/bootstrap";
 
-.btn-outline-primary {
+.btn-outline-primary, .btn-outline-success {
+  --bs-btn-hover-color: #FFF !important;
+  --bs-btn-active-color: #FFF !important;
+}
+.btn-primary {
+  --bs-btn-color: #FFF !important;
   --bs-btn-hover-color: #FFF !important;
   --bs-btn-active-color: #FFF !important;
 }
