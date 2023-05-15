@@ -18,7 +18,7 @@ function NotFoundContacts(props) {
     btn = <Button
       className="text-white mt-sm-0 mt-2 align-self-end align-self-sm-center"
       variant="success"
-      onClick={() => navigate('/')}
+      onClick={() => navigate('/new-register')}
     >
       <span className="pe-3">Adicionar</span>
       <Icon.PersonPlus size={18} />
