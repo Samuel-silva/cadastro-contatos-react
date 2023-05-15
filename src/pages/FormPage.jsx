@@ -7,6 +7,7 @@ import Header from "../components/Header";
 import Main from "../components/Main";
 import { useEffect, useState } from "react";
 import { useFetchContacts } from '../api/useFetchContacts';
+import ModalFormFinished from "../components/ModalFormFinished";
 
 const initialForm = {
   name: '',
@@ -26,13 +27,23 @@ function FormPage(props) {
 	const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState(initialForm);
-  const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [leaveHome, setleaveHome] = useState(false);
 
   const { erro, loading, axiosFetch } = useFetchContacts();
 
-  const titulo = location.pathname === '/new-register'
-  ? "Novo cadastro" : "Editar cadastro";
+  const newRegister = location.pathname === '/new-register';
+  const titulo = newRegister ? "Novo cadastro" : "Editar cadastro";
+
+  function closeModal(goToHome) {
+    setShowModal(false);
+
+    if (goToHome) {
+      setleaveHome(true)
+    }
+  }
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -58,18 +69,41 @@ function FormPage(props) {
     })
   }
 
-  useEffect(() => {
-    if (!loading && !erro) {
-      setLoading(false);
+  function modalFinished() {
+    if (showModal) {
+      return (
+        <ModalFormFinished
+          close={closeModal}
+          erro={erro}
+          newRegister={newRegister}
+          show={showModal}
+        />
+      );
+    } else {
+      return '';
     }
-  }, [erro, loading]);
+  }
+
+  useEffect(() => {
+    if (!loading && newRegister) {
+      setLoading(false);
+      setShowModal(true);
+    }
+  }, [loading, newRegister]);
+
+  useEffect(() => {
+    if (leaveHome) {
+      navigate('/');
+    }
+    // eslint-disable-next-line
+  }, [leaveHome]);
 
   return (
     <>
 			<Header />
 			<Main>
         <Breadcrumb className="pt-2">
-          <Breadcrumb.Item onClick={() => navigate('/')}>Home</Breadcrumb.Item>
+          <Breadcrumb.Item onClick={_ => navigate('/')}>Home</Breadcrumb.Item>
           <Breadcrumb.Item active>{ titulo }</Breadcrumb.Item>
         </Breadcrumb>
         <h2 className="pt-2">{ titulo }</h2>
@@ -187,7 +221,7 @@ function FormPage(props) {
                 </Col>
               </Row>
               <Button
-                className="mt-4"
+                className="mt-4 text-white"
                 type="submit"
                 variant="primary"
                 disabled={isLoading}
@@ -195,8 +229,10 @@ function FormPage(props) {
                 {isLoading ? 'Salvando…' : 'Cadastrar'}
               </Button>
             </Form>
+
           </Col>
         </Row>
+        { modalFinished() }
 			</Main>
 			<Footer />
 		</>
