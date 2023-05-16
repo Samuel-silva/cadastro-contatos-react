@@ -4,7 +4,7 @@ import api from ".";
 
 const urlContacts = 'contacts';
 
-function useFetchContacts(method, payload = null, id = 1) {
+function useFetchContacts() {
   const [data, setData] = useState([]);
   const [erro, setErro] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -13,7 +13,7 @@ function useFetchContacts(method, payload = null, id = 1) {
     const { method, id, payload } = configObj;
 
     let url = urlContacts;
-    if (method === 'delete' || method === 'put') {
+    if (method === 'delete' || method === 'put' || (method === 'get' && id)) {
       url = `${urlContacts}/${id}`;
     }
 

@@ -1,13 +1,14 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Breadcrumb, Button, Col, Form, Row } from 'react-bootstrap';
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Main from "../components/Main";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFetchContacts } from '../api/useFetchContacts';
 import ModalFormFinished from "../components/ModalFormFinished";
+import { AppContext } from '../Store';
 
 const initialForm = {
   name: '',
@@ -24,7 +25,9 @@ const initialForm = {
 
 function FormPage(props) {
   const location = useLocation();
+  const { id } = useParams();
 	const navigate = useNavigate();
+  const { contactsStore } = useContext(AppContext);
 
   const [formValues, setFormValues] = useState(initialForm);
   const [isLoading, setLoading] = useState(false);
@@ -32,10 +35,18 @@ function FormPage(props) {
   const [validated, setValidated] = useState(false);
   const [leaveHome, setleaveHome] = useState(false);
 
-  const { erro, loading, axiosFetch } = useFetchContacts();
+  const { data, erro, loading, axiosFetch } = useFetchContacts();
 
   const newRegister = location.pathname === '/new-register';
   const titulo = newRegister ? "Novo cadastro" : "Editar cadastro";
+  const txtBtnSubmit = newRegister ? 'Cadastrar' : 'Alterar';
+
+  const getData = () => {
+    axiosFetch({
+      method: 'get',
+      id,
+    })
+  }
 
   function closeModal(goToHome) {
     setShowModal(false);
@@ -45,6 +56,21 @@ function FormPage(props) {
     }
   }
 
+  function createContact(formData) {
+    axiosFetch({
+      method: 'post',
+      payload: formData,
+    })
+  }
+
+  const getEdit = (formData) => {
+    axiosFetch({
+      method: 'put',
+      id,
+      payload: formData,
+    })
+  }
+
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     event.preventDefault();
@@ -52,21 +78,14 @@ function FormPage(props) {
     setLoading(true);
 
     if (form.checkValidity() === true) {
-      createContact(formValues)
+      if (newRegister) {
+        createContact(formValues)
+      } else {
+        getEdit(formValues)
+      }
     }
 
     setValidated(true);
-  };
-
-  function updateInput(value, key) {
-    setFormValues({...formValues, [key]: value});
-  }
-
-  function createContact(formData) {
-    axiosFetch({
-      method: 'post',
-      payload: formData,
-    })
   }
 
   function modalFinished() {
@@ -84,19 +103,41 @@ function FormPage(props) {
     }
   }
 
+  function updateInput(value, key) {
+    setFormValues({...formValues, [key]: value});
+  }
+
   useEffect(() => {
-    if (!loading && newRegister) {
+    if (!loading) {
       setLoading(false);
       setShowModal(true);
+
+      if (!newRegister) {
+        setFormValues(data);
+      }
     }
-  }, [loading, newRegister]);
+    // eslint-disable-next-line
+  }, [loading, newRegister])
 
   useEffect(() => {
     if (leaveHome) {
       navigate('/');
     }
     // eslint-disable-next-line
-  }, [leaveHome]);
+  }, [leaveHome])
+
+  useEffect(() => {
+    if (!newRegister) {
+      const idNumber = parseInt(id);
+      const contact = contactsStore.filter((contact) => contact.id === idNumber);
+      if (contact.length > 0) {
+        setFormValues(contact[0]);
+      } else {
+        getData();
+      }
+    }
+    // eslint-disable-next-line
+  }, [newRegister])
 
   return (
     <>
@@ -226,7 +267,7 @@ function FormPage(props) {
                 variant="primary"
                 disabled={isLoading}
               >
-                {isLoading ? 'Salvando…' : 'Cadastrar'}
+                {isLoading ? 'Salvando…' : txtBtnSubmit}
               </Button>
             </Form>
 
