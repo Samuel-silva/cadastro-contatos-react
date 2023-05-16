@@ -9,8 +9,10 @@ import { AppContext } from '../Store';
 import React from 'react';
 import ModalDetails from './ModalDetails';
 import ModalDeleteErro from './ModalDeleteErro';
+import { useNavigate } from 'react-router-dom';
 
 const ListContacts = () => {
+	const navigate = useNavigate();
   const { data, erro, loading, axiosFetch } = useFetchContacts();
   const { setContactsStore } = useContext(AppContext);
 
@@ -109,6 +111,7 @@ const ListContacts = () => {
               <Button
                 variant="outline-primary"
                 className="mx-2"
+                onClick={_=> navigate(`edit/${contact.id}`)}
               >
                 <Icon.PencilSquare />
               </Button>

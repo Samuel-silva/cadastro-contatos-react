@@ -10,6 +10,7 @@ export default function MainRoutes() {
 		<Routes>
 			<Route path="/" element={<Home />} />
 			<Route path="/new-register" element={<FormPage />} />
+			<Route path="/edit/:id" element={<FormPage />} />
 			<Route path="*" element={<PageNotFound />} />
 		</Routes>
 	);
