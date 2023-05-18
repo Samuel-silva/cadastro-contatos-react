@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { Breadcrumb, Button, Col, Form, Row } from 'react-bootstrap';
+import { withMask } from 'use-mask-input';
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -9,6 +10,8 @@ import { useContext, useEffect, useState } from "react";
 import { useFetchContacts } from '../api/useFetchContacts';
 import ModalFormFinished from "../components/ModalFormFinished";
 import { AppContext } from '../Store';
+import { useCep } from '../api/useCep';
+import ModalErroCep from "../components/ModalErroCep";
 
 const initialForm = {
   name: '',
@@ -31,16 +34,21 @@ function FormPage(props) {
 
   const [formValues, setFormValues] = useState(initialForm);
   const [isLoading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [validated, setValidated] = useState(false);
   const [leaveHome, setleaveHome] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalCep, setShowModalCep] = useState(false);
+  const [validated, setValidated] = useState(false);
 
   const { data, erro, loading, axiosFetch } = useFetchContacts();
+  const { data: dataCep, erro: erroCep, loading: loadingCep, fetchData } = useCep();
 
   const newRegister = location.pathname === '/new-register';
   const titulo = newRegister ? "Novo cadastro" : "Editar cadastro";
   const txtBtnSubmit = newRegister ? 'Cadastrar' : 'Alterar';
 
+  const queryCep = (cep) => {
+    fetchData(cep)
+  }
   const getData = () => {
     axiosFetch({
       method: 'get',
@@ -50,6 +58,7 @@ function FormPage(props) {
 
   function closeModal(goToHome) {
     setShowModal(false);
+    setShowModalCep(false);
 
     if (goToHome) {
       setleaveHome(true)
@@ -61,6 +70,21 @@ function FormPage(props) {
       method: 'post',
       payload: formData,
     })
+  }
+
+  function getCep(number) {
+    updateInput(number, 'zipCode')
+    const onlyNumber = number.match(/\d+/g);
+    let numberFormart = '';
+
+    if (onlyNumber) {
+      numberFormart = onlyNumber.join('');
+      updateInput(numberFormart, 'zipCode')
+    }
+
+    if (numberFormart.length === 8) {
+      queryCep(numberFormart);
+    }
   }
 
   const getEdit = (formData) => {
@@ -139,6 +163,17 @@ function FormPage(props) {
     // eslint-disable-next-line
   }, [newRegister])
 
+  useEffect(() => {
+    if (!loadingCep && !erroCep) {
+        const { logradouro: address, bairro: neighborhood, localidade: city, uf: state } = dataCep;
+        setFormValues({...formValues, address, neighborhood, city, state });
+    }
+    if (erroCep) {
+      setShowModalCep(true);
+    }
+    // eslint-disable-next-line
+  }, [loadingCep, erroCep])
+
   return (
     <>
 			<Header />
@@ -176,6 +211,7 @@ function FormPage(props) {
                     <Form.Label>Telefone:</Form.Label>
                     <Form.Control
                       type="text"
+                      ref={withMask(['(99) 9999-9999', '(99) 99999-9999'])}
                       value={formValues.phone}
                       onChange={e => updateInput(e.target.value, 'phone')}
                       required
@@ -189,8 +225,9 @@ function FormPage(props) {
                     <Form.Label>CEP:</Form.Label>
                     <Form.Control
                       type="text"
+                      ref={withMask('99999-999')}
                       value={formValues.zipCode}
-                      onChange={e => updateInput(e.target.value, 'zipCode')}
+                      onChange={e => getCep(e.target.value)}
                       required
                     />
                   </Form.Group>
@@ -270,10 +307,13 @@ function FormPage(props) {
                 {isLoading ? 'Salvando…' : txtBtnSubmit}
               </Button>
             </Form>
-
           </Col>
         </Row>
         { modalFinished() }
+        <ModalErroCep
+          close={closeModal}
+          show={showModalCep}
+        />
 			</Main>
 			<Footer />
 		</>
