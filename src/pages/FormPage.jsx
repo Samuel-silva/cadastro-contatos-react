@@ -6,7 +6,7 @@ import { withMask } from 'use-mask-input';
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Main from "../components/Main";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useFetchContacts } from '../api/useFetchContacts';
 import ModalFormFinished from "../components/ModalFormFinished";
 import { AppContext } from '../Store';
@@ -39,6 +39,8 @@ function FormPage(props) {
   const [showModalCep, setShowModalCep] = useState(false);
   const [validated, setValidated] = useState(false);
 
+  const inputNameRef = useRef(null);
+
   const { data, erro, loading, axiosFetch } = useFetchContacts();
   const { data: dataCep, erro: erroCep, loading: loadingCep, fetchData } = useCep();
 
@@ -62,6 +64,8 @@ function FormPage(props) {
 
     if (goToHome) {
       setleaveHome(true)
+    } else {
+      inputNameRef.current.focus();
     }
   }
 
@@ -190,6 +194,7 @@ function FormPage(props) {
               <Form.Group>
                 <Form.Label>Nome:</Form.Label>
                 <Form.Control
+                  ref={inputNameRef}
                   type="text"
                   value={formValues.name}
                   onChange={e => updateInput(e.target.value, 'name')}
