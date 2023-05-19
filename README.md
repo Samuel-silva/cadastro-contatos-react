@@ -11,7 +11,7 @@ Na raiz do projeto rodar:
 Para abrir a versão de desenvolvimento.
 Abrir [http://localhost:3000](http://localhost:3000) para visualizar no browser.
 
-A página será recarregada quando houver mudanças salvas no código.\
+A página será recarregada quando houver mudanças salvas no código.
 
 ### Compiles and minifies for production
 
