@@ -1,10 +1,10 @@
 import { Modal, Button } from 'react-bootstrap';
 
-const txtNewRegister = "Contato adicionado com sucesso.<br />Deseja adicionar um novo contato?";
-const txtEditContact = "Contato alterado com sucesso.<br />Deseja continuar na editando este contato?";
+const txtNewRegister = <p>Contato adicionado com sucesso.<br />Deseja adicionar um novo contato?</p>;
+const txtEditContact = <p>Contato alterado com sucesso.<br />Deseja continuar na editando este contato?</p>;
 
-const erroNewRegister = "Houve um erro ao salvar o contato.<br />Deseja adicionar novamente o contato?";
-const erroEditContact = "Houve um erro ao alterar o contato.<br />Deseja tentar alterar novamente o contato?";
+const erroNewRegister = <p>Houve1 um erro ao salvar o contato.<br />Deseja adicionar novamente o contato?</p>;
+const erroEditContact = <p>Houve1 um erro ao alterar o contato.<br />Deseja tentar alterar novamente o contato?</p>
 
 function ModalFormFinished(props) {
   const { close, erro, newRegister, show } = props;
@@ -20,7 +20,7 @@ function ModalFormFinished(props) {
             <Modal.Title></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p dangerouslySetInnerHTML={{ __html: erro ? txtErro : txtSuccess }} />
+            { erro ? txtErro : txtSuccess }
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" className="text-white" onClick={_ => close(false)}>
