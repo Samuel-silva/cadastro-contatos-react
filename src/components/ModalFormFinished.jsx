@@ -1,4 +1,4 @@
-import { Modal, Button } from 'react-bootstrap';
+import { Alert, Modal, Button } from 'react-bootstrap';
 
 const txtNewRegister = <p>Contato adicionado com sucesso.<br />Deseja adicionar um novo contato?</p>;
 const txtEditContact = <p>Contato alterado com sucesso.<br />Deseja continuar na editando este contato?</p>;
@@ -20,7 +20,9 @@ function ModalFormFinished(props) {
             <Modal.Title></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            { erro ? txtErro : txtSuccess }
+            <Alert variant={erro ? 'danger' : 'success'}>
+              { erro ? txtErro : txtSuccess }
+            </Alert>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" className="text-white" onClick={_ => close(false)}>
