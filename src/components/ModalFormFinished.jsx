@@ -20,7 +20,7 @@ function ModalFormFinished(props) {
             <Modal.Title></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Alert variant={erro ? 'danger' : 'success'}>
+            <Alert className='mb-0' variant={erro ? 'danger' : 'success'}>
               { erro ? txtErro : txtSuccess }
             </Alert>
           </Modal.Body>
