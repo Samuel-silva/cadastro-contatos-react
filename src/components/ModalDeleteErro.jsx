@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button } from 'react-bootstrap';
+import { Alert, Modal, Button } from 'react-bootstrap';
 import { useFetchContacts } from '../api/useFetchContacts';
 
 const txtDelete = "Tem certeza que quer apagar este contato?";
@@ -11,8 +11,7 @@ function ModalDeleteErro(props) {
 
   const [modalErro, setModalErro] = useState(false);
 
-  const text = modalErro ? txtErro : txtDelete;
-  let btnErro;
+  let btn, content;
 
   function deleteContact() {
     loadingList();
@@ -41,12 +40,19 @@ function ModalDeleteErro(props) {
   }, [loading])
 
   if (modalErro) {
-    btnErro =
+    content =
+      <Alert className='mb-0' variant='danger' >
+        <p className="mb-0">{ txtErro }</p>
+      </Alert>;
+
+    btn =
       <Button variant="success text-white" onClick={closeModal}>
         Ok
       </Button>
   } else {
-    btnErro =
+    content = <p className="mb-0">{ txtDelete }</p>;
+
+    btn =
       <>
         <Button variant="success text-white" onClick={_ => deleteContact()}>
           Sim
@@ -63,10 +69,10 @@ function ModalDeleteErro(props) {
         <Modal show={show} animation={false} >
           <Modal.Header />
           <Modal.Body>
-            <p>{ text }</p>
+            { content }
           </Modal.Body>
           <Modal.Footer>
-            { btnErro }
+            { btn }
           </Modal.Footer>
         </Modal>
       </>
