@@ -156,7 +156,7 @@ function FormPage(props) {
 
   useEffect(() => {
     if (!newRegister) {
-      const idNumber = parseInt(id);
+      const idNumber = id;
       const contact = contactsStore.filter((contact) => contact.id === idNumber);
       if (contact.length > 0) {
         setFormValues(contact[0]);
