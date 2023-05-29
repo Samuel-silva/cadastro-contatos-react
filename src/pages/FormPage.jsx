@@ -32,8 +32,9 @@ function FormPage(props) {
 	const navigate = useNavigate();
   const { contactsStore } = useContext(AppContext);
 
+  const [firstLoad, setFirstLoad] = useState(true);
   const [formValues, setFormValues] = useState(initialForm);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [leaveHome, setleaveHome] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showModalCep, setShowModalCep] = useState(false);
@@ -103,7 +104,8 @@ function FormPage(props) {
     const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    setLoading(true);
+    setIsLoading(true);
+    setFirstLoad(false);
 
     if (form.checkValidity() === true) {
       if (newRegister) {
@@ -137,8 +139,11 @@ function FormPage(props) {
 
   useEffect(() => {
     if (!loading) {
-      setLoading(false);
-      setShowModal(true);
+      setIsLoading(false);
+
+      if (!firstLoad) {
+        setShowModal(true);
+      }
 
       if (!newRegister) {
         setFormValues(data);
