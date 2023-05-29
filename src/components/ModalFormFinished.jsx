@@ -1,10 +1,10 @@
 import { Alert, Modal, Button } from 'react-bootstrap';
 
-const txtNewRegister = <p>Contato adicionado com sucesso.<br />Deseja adicionar um novo contato?</p>;
-const txtEditContact = <p>Contato alterado com sucesso.<br />Deseja continuar na editando este contato?</p>;
+const txtNewRegister = <p className='mb-0'>Contato adicionado com sucesso.<br />Deseja adicionar um novo contato?</p>;
+const txtEditContact = <p className='mb-0'>Contato alterado com sucesso.<br />Deseja continuar na editando este contato?</p>;
 
-const erroNewRegister = <p>Houve um erro ao salvar o contato.<br />Deseja adicionar novamente o contato?</p>;
-const erroEditContact = <p>Houve um erro ao alterar o contato.<br />Deseja tentar alterar novamente o contato?</p>
+const erroNewRegister = <p className='mb-0'>Houve um erro ao salvar o contato.<br />Deseja adicionar novamente o contato?</p>;
+const erroEditContact = <p className='mb-0'>Houve um erro ao alterar o contato.<br />Deseja tentar alterar novamente o contato?</p>
 
 function ModalFormFinished(props) {
   const { close, erro, newRegister, show } = props;
