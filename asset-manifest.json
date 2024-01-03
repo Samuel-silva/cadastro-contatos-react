@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/cadastro-contatos-react/static/css/main.7432ab4c.css",
+    "main.js": "/cadastro-contatos-react/static/js/main.bc8c329f.js",
+    "index.html": "/cadastro-contatos-react/index.html",
+    "main.7432ab4c.css.map": "/cadastro-contatos-react/static/css/main.7432ab4c.css.map",
+    "main.bc8c329f.js.map": "/cadastro-contatos-react/static/js/main.bc8c329f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7432ab4c.css",
+    "static/js/main.bc8c329f.js"
+  ]
+}
