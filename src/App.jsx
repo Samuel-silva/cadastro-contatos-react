@@ -1,3 +1,5 @@
+// import Routes from "./routes";
+import Store from "./Store";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -9,14 +11,18 @@ import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import FormPage from "./pages/FormPage";
 
-// import Routes from "./routes";
-import Store from "./Store";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Home />}>
+    <Route path="/">
       <Route index element={<Home />} />
       <Route path="new-register" element={<FormPage />} />
-      <Route path="edit/:id" element={<FormPage />} />
+      <Route path="edit">
+        <Route
+          path=":id"
+          element={<FormPage />}
+        />
+      </Route>
       <Route path="*" element={<PageNotFound />} />
     </Route>
   )
